@@ -1,0 +1,311 @@
+{
+  "id": "e6735285",
+  "timestamp": 1772689554.573899,
+  "label": "",
+  "source": "# Building Agency-Preserving Generative Systems\n@ Mateo Larrea\n\nref Hud96: P. Hudak, \"Building Domain-Specific Embedded Languages\", ACM Computing Surveys, 1996\nref Wei91: M. Weiser, \"The Computer for the 21st Century\", Scientific American, 1991\nref Eno75: B. Eno, P. Schmidt, \"Oblique Strategies\", Apollo, 1975\nref Csik90: M. Csikszentmihalyi, \"Flow: The Psychology of Optimal Experience\", Harper & Row, 1990\n\n== abstract [compressed, tone=reflective]\n\n> Friction is the most important factor in creating meaningful art\n> The ideal abstraction amplifies design space while mitigating technical burden\n> Total automation is a catastrophic categorization error (assert) #core-thesis\n> A scaffolded generative system is the ultimate abstraction (suggest)\n> The one-shot generation model promises democratization but delivers alienation\n> We can inherit the power of large models by tailoring them to the domain of interest, yielding a Domain-Specific Generative Language (DSGL)\n\n== domain_specific_semantics [dialectic]\n\n>> thesis: Treat generative models as producers of intermediate representations, not final artifacts\n   evidence: SuperCollider, Processing, Haskell DSLs [Hud96]\n   counter: The black-box paradigm is simpler and more accessible\n   synthesis: Domain semantics enable user intervention \u2014 the notation is easy to generate AND easy to correct\n\n> One can reason directly within domain semantics when the AI serves as translator from intent to structure, not intent to finished product\n\n== modular_cognitive_architectures [expository]\n\n> A DSGL can be thought of as a higher-order algebraic structure for co-creation\n\n>> thesis: Generative Agents should function as distinct instruments for thought, defined by constraints rather than capabilities\n   evidence: The Facilitator: optimizes for consensus and flow, The Oblique Strategist: introduces randomness and constraints [Eno75], The Critic: analyzes output against formal rules\n   counter: If an agent simply executes commands, it is a tool\n   synthesis: If it pushes back, it is a partner \u2014 personality is a functional component\n\n> A modular architecture allows swapping the reasoning engine without changing the rendering engine, like swapping a guitar pedal without changing the guitar\n\n== the_question_of_meaning [polemic, tone=urgent]\n\n> As AI automates creative labor, we face a second nihilism #philosophical-stakes\n\n>> thesis: The answer lies in the design of our tools\n   evidence: Nietzsche's warning about the erosion of metaphysical frameworks, The Protestant Work Ethic as meaning-substitute, DSGL as agency-preserving alternative\n   counter: If we design for efficiency (one-shot prompting), we succumb to the void\n   synthesis: If we design for agency \u2014 building DSGLs that demand steerability and cognitive architectures that invite dialectic \u2014 we preserve the dignity of the maker\n\n> The goal must not be to solve the problem of content creation \u2014 the world has enough content\n> The goal must be to solve the problem of human relevance in a synthetic age (assert) #final-thesis",
+  "parsed": {
+    "title": "Building Agency-Preserving Generative Systems",
+    "author": "Mateo Larrea",
+    "sections": [
+      {
+        "name": "abstract",
+        "rhetoric": "compressed",
+        "tone": "reflective",
+        "elements": [
+          {
+            "type": "claim",
+            "text": "Friction is the most important factor in creating meaningful art",
+            "strength": "assert",
+            "tag": null
+          },
+          {
+            "type": "claim",
+            "text": "The ideal abstraction amplifies design space while mitigating technical burden",
+            "strength": "assert",
+            "tag": null
+          },
+          {
+            "type": "claim",
+            "text": "Total automation is a catastrophic categorization error",
+            "strength": "assert",
+            "tag": "core-thesis"
+          },
+          {
+            "type": "claim",
+            "text": "A scaffolded generative system is the ultimate abstraction",
+            "strength": "suggest",
+            "tag": null
+          },
+          {
+            "type": "claim",
+            "text": "The one-shot generation model promises democratization but delivers alienation",
+            "strength": "assert",
+            "tag": null
+          },
+          {
+            "type": "claim",
+            "text": "We can inherit the power of large models by tailoring them to the domain of interest, yielding a Domain-Specific Generative Language (DSGL)",
+            "strength": "assert",
+            "tag": null
+          }
+        ]
+      },
+      {
+        "name": "domain_specific_semantics",
+        "rhetoric": "dialectic",
+        "tone": null,
+        "elements": [
+          {
+            "type": "argument",
+            "thesis": "Treat generative models as producers of intermediate representations, not final artifacts",
+            "evidence": [
+              "SuperCollider",
+              "Processing",
+              "Haskell DSLs [Hud96]"
+            ],
+            "counter": "The black-box paradigm is simpler and more accessible",
+            "synthesis": "Domain semantics enable user intervention \u2014 the notation is easy to generate AND easy to correct"
+          },
+          {
+            "type": "claim",
+            "text": "One can reason directly within domain semantics when the AI serves as translator from intent to structure, not intent to finished product",
+            "strength": "assert",
+            "tag": null
+          }
+        ]
+      },
+      {
+        "name": "modular_cognitive_architectures",
+        "rhetoric": "expository",
+        "tone": null,
+        "elements": [
+          {
+            "type": "claim",
+            "text": "A DSGL can be thought of as a higher-order algebraic structure for co-creation",
+            "strength": "assert",
+            "tag": null
+          },
+          {
+            "type": "argument",
+            "thesis": "Generative Agents should function as distinct instruments for thought, defined by constraints rather than capabilities",
+            "evidence": [
+              "The Facilitator: optimizes for consensus and flow",
+              "The Oblique Strategist: introduces randomness and constraints [Eno75]",
+              "The Critic: analyzes output against formal rules"
+            ],
+            "counter": "If an agent simply executes commands, it is a tool",
+            "synthesis": "If it pushes back, it is a partner \u2014 personality is a functional component"
+          },
+          {
+            "type": "claim",
+            "text": "A modular architecture allows swapping the reasoning engine without changing the rendering engine, like swapping a guitar pedal without changing the guitar",
+            "strength": "assert",
+            "tag": null
+          }
+        ]
+      },
+      {
+        "name": "the_question_of_meaning",
+        "rhetoric": "polemic",
+        "tone": "urgent",
+        "elements": [
+          {
+            "type": "claim",
+            "text": "As AI automates creative labor, we face a second nihilism",
+            "strength": "assert",
+            "tag": "philosophical-stakes"
+          },
+          {
+            "type": "argument",
+            "thesis": "The answer lies in the design of our tools",
+            "evidence": [
+              "Nietzsche's warning about the erosion of metaphysical frameworks",
+              "The Protestant Work Ethic as meaning-substitute",
+              "DSGL as agency-preserving alternative"
+            ],
+            "counter": "If we design for efficiency (one-shot prompting), we succumb to the void",
+            "synthesis": "If we design for agency \u2014 building DSGLs that demand steerability and cognitive architectures that invite dialectic \u2014 we preserve the dignity of the maker"
+          },
+          {
+            "type": "claim",
+            "text": "The goal must not be to solve the problem of content creation \u2014 the world has enough content",
+            "strength": "assert",
+            "tag": null
+          },
+          {
+            "type": "claim",
+            "text": "The goal must be to solve the problem of human relevance in a synthetic age",
+            "strength": "assert",
+            "tag": "final-thesis"
+          }
+        ]
+      }
+    ],
+    "references": [
+      {
+        "key": "Hud96",
+        "authors": "P. Hudak",
+        "title": "Building Domain-Specific Embedded Languages",
+        "venue": "ACM Computing Surveys",
+        "year": 1996
+      },
+      {
+        "key": "Wei91",
+        "authors": "M. Weiser",
+        "title": "The Computer for the 21st Century",
+        "venue": "Scientific American",
+        "year": 1991
+      },
+      {
+        "key": "Eno75",
+        "authors": "B. Eno, P. Schmidt",
+        "title": "Oblique Strategies",
+        "venue": "Apollo",
+        "year": 1975
+      },
+      {
+        "key": "Csik90",
+        "authors": "M. Csikszentmihalyi",
+        "title": "Flow: The Psychology of Optimal Experience",
+        "venue": "Harper & Row",
+        "year": 1990
+      }
+    ],
+    "rendered": {}
+  },
+  "sections": [
+    {
+      "name": "abstract",
+      "rhetoric": "compressed",
+      "tone": "reflective",
+      "elements": [
+        {
+          "type": "claim",
+          "text": "Friction is the most important factor in creating meaningful art",
+          "strength": "assert",
+          "tag": null
+        },
+        {
+          "type": "claim",
+          "text": "The ideal abstraction amplifies design space while mitigating technical burden",
+          "strength": "assert",
+          "tag": null
+        },
+        {
+          "type": "claim",
+          "text": "Total automation is a catastrophic categorization error",
+          "strength": "assert",
+          "tag": "core-thesis"
+        },
+        {
+          "type": "claim",
+          "text": "A scaffolded generative system is the ultimate abstraction",
+          "strength": "suggest",
+          "tag": null
+        },
+        {
+          "type": "claim",
+          "text": "The one-shot generation model promises democratization but delivers alienation",
+          "strength": "assert",
+          "tag": null
+        },
+        {
+          "type": "claim",
+          "text": "We can inherit the power of large models by tailoring them to the domain of interest, yielding a Domain-Specific Generative Language (DSGL)",
+          "strength": "assert",
+          "tag": null
+        }
+      ]
+    },
+    {
+      "name": "domain_specific_semantics",
+      "rhetoric": "dialectic",
+      "tone": null,
+      "elements": [
+        {
+          "type": "argument",
+          "thesis": "Treat generative models as producers of intermediate representations, not final artifacts",
+          "evidence": [
+            "SuperCollider",
+            "Processing",
+            "Haskell DSLs [Hud96]"
+          ],
+          "counter": "The black-box paradigm is simpler and more accessible",
+          "synthesis": "Domain semantics enable user intervention \u2014 the notation is easy to generate AND easy to correct"
+        },
+        {
+          "type": "claim",
+          "text": "One can reason directly within domain semantics when the AI serves as translator from intent to structure, not intent to finished product",
+          "strength": "assert",
+          "tag": null
+        }
+      ]
+    },
+    {
+      "name": "modular_cognitive_architectures",
+      "rhetoric": "expository",
+      "tone": null,
+      "elements": [
+        {
+          "type": "claim",
+          "text": "A DSGL can be thought of as a higher-order algebraic structure for co-creation",
+          "strength": "assert",
+          "tag": null
+        },
+        {
+          "type": "argument",
+          "thesis": "Generative Agents should function as distinct instruments for thought, defined by constraints rather than capabilities",
+          "evidence": [
+            "The Facilitator: optimizes for consensus and flow",
+            "The Oblique Strategist: introduces randomness and constraints [Eno75]",
+            "The Critic: analyzes output against formal rules"
+          ],
+          "counter": "If an agent simply executes commands, it is a tool",
+          "synthesis": "If it pushes back, it is a partner \u2014 personality is a functional component"
+        },
+        {
+          "type": "claim",
+          "text": "A modular architecture allows swapping the reasoning engine without changing the rendering engine, like swapping a guitar pedal without changing the guitar",
+          "strength": "assert",
+          "tag": null
+        }
+      ]
+    },
+    {
+      "name": "the_question_of_meaning",
+      "rhetoric": "polemic",
+      "tone": "urgent",
+      "elements": [
+        {
+          "type": "claim",
+          "text": "As AI automates creative labor, we face a second nihilism",
+          "strength": "assert",
+          "tag": "philosophical-stakes"
+        },
+        {
+          "type": "argument",
+          "thesis": "The answer lies in the design of our tools",
+          "evidence": [
+            "Nietzsche's warning about the erosion of metaphysical frameworks",
+            "The Protestant Work Ethic as meaning-substitute",
+            "DSGL as agency-preserving alternative"
+          ],
+          "counter": "If we design for efficiency (one-shot prompting), we succumb to the void",
+          "synthesis": "If we design for agency \u2014 building DSGLs that demand steerability and cognitive architectures that invite dialectic \u2014 we preserve the dignity of the maker"
+        },
+        {
+          "type": "claim",
+          "text": "The goal must not be to solve the problem of content creation \u2014 the world has enough content",
+          "strength": "assert",
+          "tag": null
+        },
+        {
+          "type": "claim",
+          "text": "The goal must be to solve the problem of human relevance in a synthetic age",
+          "strength": "assert",
+          "tag": "final-thesis"
+        }
+      ]
+    }
+  ]
+}

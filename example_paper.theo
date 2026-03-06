@@ -1,0 +1,101 @@
+# Building Agency-Preserving Generative Systems
+@ Mateo Larrea
+
+ref Hud96: P. Hudak, "Building Domain-Specific Embedded Languages", ACM Computing Surveys, 1996
+ref Wei91: M. Weiser, "The Computer for the 21st Century", Scientific American, 1991
+ref Eno75: B. Eno, P. Schmidt, "Oblique Strategies", Apollo, 1975
+ref Csik90: M. Csikszentmihalyi, "Flow: The Psychology of Optimal Experience", Harper & Row, 1990
+
+== abstract [compressed, tone=compressed]
+
+> Friction is the most important factor in creating meaningful art
+> The ideal abstraction amplifies design space while mitigating technical burden
+> Total automation is a catastrophic categorization error (assert) #core-thesis
+> A scaffolded generative system is the ultimate abstraction (suggest)
+> The one-shot generation model promises democratization but delivers alienation
+> We can inherit the power of large models by tailoring them to the domain of interest, yielding a Domain-Specific Generative Language (DSGL)
+
+== domain_specific_semantics [dialectic]
+
+>> thesis: Treat generative models as producers of intermediate representations, not final artifacts
+   evidence: SuperCollider, Processing, Haskell DSLs [Hud96]
+   counter: The black-box paradigm is simpler and more accessible
+   synthesis: Domain semantics enable user intervention — the notation is easy to generate AND easy to correct
+
+> One can reason directly within domain semantics when the AI serves as translator from intent to structure, not intent to finished product
+
+~~ transaction_vs_structure (haskell) "Transaction vs. Structure — black-box approach vs. DSGL approach"
+```
+-- The "Black Box" approach (Current State of the Art):
+-- The internal structure is opaque and immutable.
+song = generate "A peaceful forest with birds"
+-- resulting_audio is static. Regeneration changes everything.
+
+-- The DSGL Approach (Agency-Preserving):
+-- The AI generates a persistent, editable scene graph.
+type Scene = List SoundObject
+
+forest :: Scene
+forest = [ bird_1, bird_2, wind_bg ]
+
+bird_1 :: SoundObject
+bird_1 = Agent {
+    trajectory = circular 5.0,
+    timbre = "sparrow",
+    behavior = agile
+}
+
+-- The user can now intervene using Natural Language OR Code:
+-- "Make bird #2 fly closer to me" -> updates only the trajectory parameter.
+```
+
+> This preserves the loop of action and reflection essential to the phenomenology of making
+
+== modular_cognitive_architectures [expository]
+
+> A DSGL can be thought of as a higher-order algebraic structure for co-creation
+
+>> thesis: Generative Agents should function as distinct instruments for thought, defined by constraints rather than capabilities
+   evidence: The Facilitator: optimizes for consensus and flow, The Oblique Strategist: introduces randomness and constraints [Eno75], The Critic: analyzes output against formal rules
+   counter: If an agent simply executes commands, it is a tool
+   synthesis: If it pushes back, it is a partner — personality is a functional component
+
+> A modular architecture allows swapping the reasoning engine without changing the rendering engine, like swapping a guitar pedal without changing the guitar
+
+== instrumentation_as_self_reflection [dialectic]
+
+>> thesis: A generative system should produce feedback, not just output
+   evidence: Software debuggers, The creative act as feedback loop [Csik90]
+   counter: Debuggers are traditionally treated as tools for fixing errors
+   synthesis: In creative expression, the error is a misalignment between internal state and external expression — instrumentation lets us debug the aesthetic trajectory
+
+~~ feedback_loop (haskell) "The Feedback Loop — instrumenting the generative process"
+```
+-- Traditional Input
+input :: Prompt -> Image
+
+-- Instrumenting the Generative Process
+type LatentState = Vector N
+
+-- The system exposes its internal reasoning to the user
+visualize :: LatentState -> Graphic
+intervene :: Graphic -> UserInput -> LatentState
+
+-- The generation is a conversation, not a command
+run_session :: InitialState -> (State -> UserInput -> State) -> FinalArtifact
+```
+
+> The abstraction is no longer separating the user from the machine; it is visualizing the machine's interpretation of the user's intent
+
+== the_question_of_meaning [polemic, tone=urgent]
+
+> As AI automates creative labor, we face a second nihilism #philosophical-stakes
+
+>> thesis: The answer lies in the design of our tools
+   evidence: Nietzsche's warning about the erosion of metaphysical frameworks, The Protestant Work Ethic as meaning-substitute, DSGL as agency-preserving alternative
+   counter: If we design for efficiency (one-shot prompting), we succumb to the void
+   synthesis: If we design for agency — building DSGLs that demand steerability and cognitive architectures that invite dialectic — we preserve the dignity of the maker
+
+> The goal must not be to solve the problem of content creation — the world has enough content
+> The goal must be to solve the problem of human relevance in a synthetic age (assert) #final-thesis
+> Automation should mitigate technical burden but leave the weight of creative decision-making squarely on the shoulders of the human
