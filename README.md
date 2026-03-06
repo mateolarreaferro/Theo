@@ -1,8 +1,8 @@
 # Theo
 
-Theo is a structured authoring system for essays and an example of a Domain-Specific Generative Language (DSGL). Instead of asking an AI to write an essay from a single prompt, you write a `.theo` file that specifies the *structure* of your essay — its sections, claims, arguments, figures, and references — and the system renders each section into prose using Claude. You stay in control of what the essay says; the model handles how it says it.
+Theo is a structured authoring system for essays. Instead of asking an AI to write an essay from a single prompt, you write a `.theo` file that specifies the *structure* of your essay — its sections, claims, arguments, figures, and references — and the system renders each section into prose using Claude. You stay in control of what the essay says; the model handles how it says it.
 
-The core idea is that the generative model should produce intermediate representations, not final artifacts. A `.theo` file is easy for a model to generate and easy for a human to read, edit, and correct. The notation captures the semantics of academic writing — rhetoric modes, claim strengths, argument structure, cross-references — so that the author can reason directly within the domain rather than wrestling with raw prose. This preserves the loop of action and reflection that is essential to the act of writing.
+A `.theo` file is easy for a model to generate and easy for a human to read, edit, and correct. The notation captures the semantics of academic writing — rhetoric modes, claim strengths, argument structure, cross-references — so that the author can reason directly within the domain rather than wrestling with raw prose. This preserves the loop of action and reflection that is essential to the act of writing.
 
 The system also includes cognitive agents — a Critic, an Oblique Strategist, and a Facilitator — that review rendered prose and return structured feedback. These agents never rewrite your text. They analyze, challenge, and provoke, leaving the creative decisions to you. In this way, personality is not a gimmick but a functional component: if an agent simply executes commands, it is a tool; if it pushes back, it is a partner.
 
@@ -28,7 +28,7 @@ The system also includes cognitive agents — a Critic, an Oblique Strategist, a
 
 ```bash
 git clone <repo-url>
-cd DSGL
+cd Theo
 pip install -r requirements.txt
 ```
 
