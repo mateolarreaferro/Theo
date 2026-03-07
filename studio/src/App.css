@@ -387,6 +387,61 @@ html, body, #root {
   transition: stroke-opacity 0.15s;
 }
 
+/* ── Trajectories ────────────────────────────── */
+.trajectory-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.trajectory-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.trajectory-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.trajectory-btn.loading {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.trajectory-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  background: transparent;
+  border: 1px solid;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.15s;
+}
+
+.trajectory-chip:hover {
+  opacity: 0.8;
+}
+
+.trajectory-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
 /* ── Annotations ──────────────────────────────── */
 .annotations-panel {
   padding: 10px 16px;

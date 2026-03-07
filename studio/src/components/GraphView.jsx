@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceX, forceY } from "d3-force";
 import { select } from "d3-selection";
 import { drag } from "d3-drag";
@@ -18,6 +18,8 @@ const NODE_COLORS = {
   tag: "#8888bb",
   ref: "#7a6a5a",
 };
+
+const TRAJECTORY_COLORS = ["#bb8844", "#44aa88", "#8866bb"];
 
 function truncate(str, max) {
   if (!str) return "";
@@ -192,9 +194,10 @@ function buildGraph(parsed) {
   return { nodes, links };
 }
 
-export default function GraphView({ parsed, onClickSection }) {
+export default function GraphView({ parsed, onClickSection, trajectories, onRequestTrajectories, trajectoriesLoading }) {
   const svgRef = useRef(null);
   const simRef = useRef(null);
+  const [activeTrajectory, setActiveTrajectory] = useState(null); // index or null
 
   const graph = useMemo(() => buildGraph(parsed), [parsed]);
 
@@ -221,6 +224,21 @@ export default function GraphView({ parsed, onClickSection }) {
       .attr("d", "M0,0 L10,3 L0,6")
       .attr("fill", "#444");
 
+    // Trajectory arrow markers
+    TRAJECTORY_COLORS.forEach((color, i) => {
+      defs.append("marker")
+        .attr("id", `traj-arrow-${i}`)
+        .attr("viewBox", "0 0 10 6")
+        .attr("refX", 28)
+        .attr("refY", 3)
+        .attr("markerWidth", 8)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,0 L10,3 L0,6")
+        .attr("fill", color);
+    });
+
     // Zoom behavior
     const g = svg.append("g");
     const zoomBehavior = zoom()
@@ -234,18 +252,42 @@ export default function GraphView({ parsed, onClickSection }) {
     const nodes = graph.nodes.map((n) => ({ ...n }));
     const links = graph.links.map((l) => ({ ...l }));
 
+    // Build trajectory links from active trajectory
+    const trajectoryLinks = [];
+    if (activeTrajectory !== null && trajectories && trajectories[activeTrajectory]) {
+      const traj = trajectories[activeTrajectory];
+      const sectionNames = parsed?.sections?.map((s) => s.name) || [];
+      (traj.edges || []).forEach((edge) => {
+        const fromIdx = sectionNames.indexOf(edge.from);
+        const toIdx = sectionNames.indexOf(edge.to);
+        if (fromIdx !== -1 && toIdx !== -1) {
+          trajectoryLinks.push({
+            source: `sec-${fromIdx}`,
+            target: `sec-${toIdx}`,
+            type: "trajectory",
+            label: edge.reason || "",
+            trajIndex: activeTrajectory,
+          });
+        }
+      });
+    }
+
+    const allLinks = [...links, ...trajectoryLinks];
+
     const sim = forceSimulation(nodes)
-      .force("link", forceLink(links).id((d) => d.id).distance((d) => {
+      .force("link", forceLink(allLinks).id((d) => d.id).distance((d) => {
         if (d.type === "contains") return 40;
         if (d.type === "argues") return 50;
         if (d.type === "has-tag") return 60;
         if (d.type === "flow") return 90;
         if (d.type === "cites") return 70;
         if (d.type === "thematic") return 120;
+        if (d.type === "trajectory") return 100;
         return 80;
       }).strength((d) => {
         if (d.type === "thematic") return 0.1;
         if (d.type === "shared-tag") return 0.3;
+        if (d.type === "trajectory") return 0.2;
         return 0.5;
       }))
       .force("charge", forceManyBody().strength((d) => {
@@ -269,25 +311,39 @@ export default function GraphView({ parsed, onClickSection }) {
       "cites": { stroke: "#7a6a5a66", width: 1, dash: "3,3", arrow: false },
       "shared-tag": { stroke: "#8888cc", width: 2, dash: "6,3", arrow: false },
       "thematic": { stroke: "#666633", width: 1.5, dash: "8,4", arrow: false },
+      "trajectory": { stroke: "#bb8844", width: 2.5, dash: "none", arrow: true },
     };
+
+    // Dim base edges when a trajectory is active
+    const hasActiveTrajectory = activeTrajectory !== null && trajectoryLinks.length > 0;
 
     const link = g.append("g")
       .selectAll("line")
-      .data(links)
+      .data(allLinks)
       .join("line")
-      .attr("stroke", (d) => (edgeStyle[d.type] || edgeStyle.contains).stroke)
+      .attr("stroke", (d) => {
+        if (d.type === "trajectory") return TRAJECTORY_COLORS[d.trajIndex % TRAJECTORY_COLORS.length];
+        return (edgeStyle[d.type] || edgeStyle.contains).stroke;
+      })
       .attr("stroke-width", (d) => (edgeStyle[d.type] || edgeStyle.contains).width)
       .attr("stroke-dasharray", (d) => (edgeStyle[d.type] || edgeStyle.contains).dash)
-      .attr("marker-end", (d) => (edgeStyle[d.type] || {}).arrow ? "url(#arrow)" : "")
-      .attr("stroke-opacity", 0.8);
+      .attr("marker-end", (d) => {
+        if (d.type === "trajectory") return `url(#traj-arrow-${d.trajIndex % TRAJECTORY_COLORS.length})`;
+        return (edgeStyle[d.type] || {}).arrow ? "url(#arrow)" : "";
+      })
+      .attr("stroke-opacity", (d) => {
+        if (d.type === "trajectory") return 0.9;
+        return hasActiveTrajectory ? 0.15 : 0.8;
+      });
 
-    // Edge labels for thematic connections
+    // Edge labels for thematic connections and trajectories
+    const labeledLinks = allLinks.filter((l) => l.type === "thematic" || l.type === "shared-tag" || l.type === "trajectory");
     const edgeLabels = g.append("g")
       .selectAll("text")
-      .data(links.filter((l) => l.type === "thematic" || l.type === "shared-tag"))
+      .data(labeledLinks)
       .join("text")
-      .attr("fill", "#555")
-      .attr("font-size", "7px")
+      .attr("fill", (d) => d.type === "trajectory" ? TRAJECTORY_COLORS[d.trajIndex % TRAJECTORY_COLORS.length] : "#555")
+      .attr("font-size", (d) => d.type === "trajectory" ? "8px" : "7px")
       .attr("font-family", "'JetBrains Mono', monospace")
       .attr("text-anchor", "middle")
       .text((d) => d.label || "");
@@ -329,7 +385,7 @@ export default function GraphView({ parsed, onClickSection }) {
     // Hover: highlight connected edges and nodes
     node.on("mouseenter", (event, d) => {
       const connectedIds = new Set([d.id]);
-      links.forEach((l) => {
+      allLinks.forEach((l) => {
         const src = typeof l.source === "object" ? l.source.id : l.source;
         const tgt = typeof l.target === "object" ? l.target.id : l.target;
         if (src === d.id || tgt === d.id) {
@@ -359,8 +415,10 @@ export default function GraphView({ parsed, onClickSection }) {
         return (connectedIds.has(src) && connectedIds.has(tgt)) ? 1 : 0.1;
       });
     }).on("mouseleave", () => {
-      link.attr("stroke-opacity", 0.8)
-        .attr("stroke-width", (l) => (edgeStyle[l.type] || edgeStyle.contains).width);
+      link.attr("stroke-opacity", (d) => {
+        if (d.type === "trajectory") return 0.9;
+        return hasActiveTrajectory ? 0.15 : 0.8;
+      }).attr("stroke-width", (l) => (edgeStyle[l.type] || edgeStyle.contains).width);
       node.select("circle").attr("opacity", (d) =>
         d.type === "section" ? 0.8 : d.type === "claim" ? 0.4 : 0.6
       );
@@ -409,7 +467,7 @@ export default function GraphView({ parsed, onClickSection }) {
     return () => {
       sim.stop();
     };
-  }, [graph, onClickSection]);
+  }, [graph, onClickSection, activeTrajectory, trajectories, parsed]);
 
   if (!parsed || graph.nodes.length === 0) {
     return (
@@ -420,6 +478,37 @@ export default function GraphView({ parsed, onClickSection }) {
   }
 
   return (
-    <svg ref={svgRef} className="graph-svg" />
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+      <div className="trajectory-bar">
+        <button
+          className={`trajectory-btn ${trajectoriesLoading ? "loading" : ""}`}
+          onClick={onRequestTrajectories}
+          disabled={trajectoriesLoading}
+        >
+          {trajectoriesLoading ? "thinking..." : "show trajectories"}
+        </button>
+        {trajectories && trajectories.map((traj, i) => (
+          <button
+            key={i}
+            className={`trajectory-chip ${activeTrajectory === i ? "active" : ""}`}
+            style={{
+              borderColor: TRAJECTORY_COLORS[i % TRAJECTORY_COLORS.length],
+              color: activeTrajectory === i ? "#111" : TRAJECTORY_COLORS[i % TRAJECTORY_COLORS.length],
+              backgroundColor: activeTrajectory === i ? TRAJECTORY_COLORS[i % TRAJECTORY_COLORS.length] : "transparent",
+            }}
+            onClick={() => setActiveTrajectory(activeTrajectory === i ? null : i)}
+            title={traj.description}
+          >
+            {traj.name}
+          </button>
+        ))}
+        {activeTrajectory !== null && trajectories && trajectories[activeTrajectory] && (
+          <span className="trajectory-desc">
+            {trajectories[activeTrajectory].description}
+          </span>
+        )}
+      </div>
+      <svg ref={svgRef} className="graph-svg" />
+    </div>
   );
 }

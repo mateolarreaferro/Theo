@@ -78,6 +78,9 @@ export default function Editor({
   onPanel2ModeChange,
   parsed,
   onClickSection,
+  trajectories,
+  onRequestTrajectories,
+  trajectoriesLoading,
 }) {
   const containerRef = useRef(null);
   const viewRef = useRef(null);
@@ -176,7 +179,13 @@ export default function Editor({
           )}
         </>
       ) : (
-        <GraphView parsed={parsed} onClickSection={onClickSection} />
+        <GraphView
+          parsed={parsed}
+          onClickSection={onClickSection}
+          trajectories={trajectories}
+          onRequestTrajectories={onRequestTrajectories}
+          trajectoriesLoading={trajectoriesLoading}
+        />
       )}
     </>
   );

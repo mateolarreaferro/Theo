@@ -63,6 +63,9 @@ class PreGenClarifyRequest(BaseModel):
     freeform: str
     existing_theo: str = ""
 
+class TrajectoriesRequest(BaseModel):
+    text: str
+
 class SaveVersionRequest(BaseModel):
     source: str
     parsed: dict
@@ -295,6 +298,62 @@ Use the author's answers above to guide: section structure, rhetoric modes, tone
             theo_text = "\n".join(lines)
 
         return {"theo": theo_text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+TRAJECTORIES_SYSTEM = """You are a structural writing analyst. Given an essay's structure (sections, claims, arguments, and their connections), you suggest alternative trajectories: different ways to connect and order the ideas.
+
+Each trajectory is a possible narrative path through the material. Think about:
+- Different orderings of sections that change the rhetorical arc
+- Thematic threads that connect claims across non-adjacent sections
+- Alternative groupings of ideas that reframe the argument
+
+Return exactly 3 trajectories as a JSON array. Each trajectory has:
+- "name": a short label (2-4 words)
+- "description": one sentence explaining the logic of this path
+- "edges": an array of {"from": "section_name", "to": "section_name", "reason": "brief reason"} representing the suggested connections in order
+
+The edges define a reading/narrative path. They don't have to be linear — they can skip sections, loop back, or branch. The point is to show the author alternative ways their ideas could flow.
+
+Return ONLY the JSON array, no other text."""
+
+
+@app.post("/trajectories")
+def trajectories(req: TrajectoriesRequest):
+    try:
+        builder = parse(req.text)
+        essay = builder.essay
+
+        # Build a summary of the structure for Claude
+        parts = [f"Title: {essay.title}", f"Author: {essay.author}", ""]
+        for sec in essay.sections:
+            parts.append(f"Section: {sec.name} [{sec.rhetoric.value}]")
+            for elem in sec.elements:
+                parts.append(f"  {_serialize_element(elem)}")
+            parts.append("")
+
+        structure_summary = "\n".join(parts)
+
+        client = anthropic.Anthropic()
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2048,
+            system=TRAJECTORIES_SYSTEM,
+            messages=[{"role": "user", "content": f"Analyze this essay structure and suggest 3 alternative trajectories:\n\n{structure_summary}"}],
+        )
+
+        response_text = message.content[0].text
+        try:
+            start = response_text.index("[")
+            end = response_text.rindex("]") + 1
+            trajectories_data = json.loads(response_text[start:end])
+        except (ValueError, json.JSONDecodeError):
+            trajectories_data = []
+
+        return {"trajectories": trajectories_data}
+    except ParseError as e:
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

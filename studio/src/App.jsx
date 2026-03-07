@@ -69,6 +69,8 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
+  const [trajectories, setTrajectories] = useState(null);
+  const [trajectoriesLoading, setTrajectoriesLoading] = useState(false);
   const parseTimer = useRef(null);
   const [panelWidths, setPanelWidths] = useState([25, 40, 35]); // percentages
   const dragging = useRef(null);
@@ -181,6 +183,7 @@ export default function App() {
   const handleSourceChange = useCallback(
     (text) => {
       setSource(text);
+      setTrajectories(null);
       clearTimeout(parseTimer.current);
       parseTimer.current = setTimeout(() => doParse(text), 500);
     },
@@ -329,6 +332,19 @@ export default function App() {
     }
   }, [parsed, rendered]);
 
+  const handleRequestTrajectories = useCallback(async () => {
+    if (!source.trim()) return;
+    setTrajectoriesLoading(true);
+    try {
+      const res = await api.trajectories(source);
+      setTrajectories(res.trajectories);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setTrajectoriesLoading(false);
+    }
+  }, [source]);
+
   const handleSendToFreeform = useCallback(() => {
     if (!parsed) return;
     const parts = [];
@@ -420,6 +436,9 @@ export default function App() {
               panel2Mode={panel2Mode}
               onPanel2ModeChange={setPanel2Mode}
               parsed={parsed}
+              trajectories={trajectories}
+              onRequestTrajectories={handleRequestTrajectories}
+              trajectoriesLoading={trajectoriesLoading}
             />
           </div>
         </div>

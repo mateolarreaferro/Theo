@@ -40,6 +40,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ text, section_name: sectionName, answers, prior_rendered: priorRendered }),
     }),
+  trajectories: (text) =>
+    request("/trajectories", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    }),
   listVersions: () => request("/versions"),
   saveVersion: (source, parsed, label = "") =>
     request("/versions", {
