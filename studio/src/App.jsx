@@ -53,10 +53,38 @@ ref Csik90: M. Csikszentmihalyi, "Flow: The Psychology of Optimal Experience", H
 > The goal must not be to solve the problem of content creation — the world has enough content
 > The goal must be to solve the problem of human relevance in a synthetic age (assert) #final-thesis`;
 
+// In a browser there are no native file dialogs: open goes through a file
+// input and save through a download.
+function pickFile() {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".theo,.txt,text/plain";
+    input.onchange = async () => {
+      const file = input.files[0];
+      resolve(file ? { path: file.name, content: await file.text() } : null);
+    };
+    input.oncancel = () => resolve(null);
+    input.click();
+  });
+}
+
+function downloadText(text, filename) {
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function App() {
   const [freeform, setFreeform] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [source, setSource] = useState("");
+  // The desktop app opens blank; in a browser, start from the example so a
+  // first-time visitor has something to read and render.
+  const [source, setSource] = useState(() => (window.electronAPI ? "" : EXAMPLE));
   const [parsed, setParsed] = useState(null);
   const [rendered, setRendered] = useState({});
   const [annotations, setAnnotations] = useState([]);
@@ -233,8 +261,9 @@ export default function App() {
   );
 
   const handleOpen = useCallback(async () => {
-    if (!window.electronAPI) return;
-    const result = await window.electronAPI.openFile();
+    const result = window.electronAPI
+      ? await window.electronAPI.openFile()
+      : await pickFile();
     if (result) {
       setSource(result.content);
       setRendered({});
@@ -244,9 +273,13 @@ export default function App() {
   }, [doParse]);
 
   const handleSave = useCallback(async () => {
-    if (!window.electronAPI) return;
-    await window.electronAPI.saveFile(source);
-  }, [source]);
+    if (window.electronAPI) {
+      await window.electronAPI.saveFile(source);
+    } else {
+      const name = (parsed?.title || "essay").replace(/\s+/g, "_").toLowerCase();
+      downloadText(source, `${name}.theo`);
+    }
+  }, [source, parsed]);
 
   const handleReorderSections = useCallback(
     (fromIdx, toIdx) => {
@@ -322,13 +355,7 @@ export default function App() {
     if (window.electronAPI) {
       await window.electronAPI.saveFile(text);
     } else {
-      const blob = new Blob([text], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${parsed.title.replace(/\s+/g, "_").toLowerCase()}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadText(text, `${parsed.title.replace(/\s+/g, "_").toLowerCase()}.txt`);
     }
   }, [parsed, rendered]);
 

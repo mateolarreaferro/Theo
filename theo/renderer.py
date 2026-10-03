@@ -7,6 +7,7 @@ from typing import Optional
 
 import anthropic
 
+from .config import MODEL
 from .model import Essay, Section, Feedback
 from .prompts import essay_system_prompt, section_prompt
 
@@ -49,7 +50,8 @@ def render_section(
     message = client.messages.create(
         model=model,
         max_tokens=2048,
-        temperature=temperature,
+        # The SDK no longer has a temperature argument; the API still takes it.
+        extra_body={"temperature": temperature},
         system=sys_prompt,
         messages=[{"role": "user", "content": user_prompt}],
     )
@@ -61,7 +63,7 @@ def render_section(
 def render_essay(
     essay: Essay,
     agents: Optional[list] = None,
-    model: str = "claude-sonnet-4-20250514",
+    model: str = MODEL,
     output: Optional[str] = None,
 ) -> dict[str, str]:
     """Render all sections sequentially, then run agent reviews.

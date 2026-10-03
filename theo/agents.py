@@ -10,6 +10,7 @@ from abc import ABC, abstractmethod
 
 import anthropic
 
+from .config import MODEL
 from .model import Essay, Feedback, FeedbackKind
 from .renderer import serialize_essay_for_prompt
 from .prompts import CRITIC_SYSTEM, OBLIQUE_STRATEGIST_SYSTEM, FACILITATOR_SYSTEM
@@ -29,7 +30,7 @@ class Agent(ABC):
         self,
         essay: Essay,
         rendered: dict[str, str],
-        model: str = "claude-sonnet-4-20250514",
+        model: str = MODEL,
     ) -> list[dict]:
         """Shared helper: send essay structure + rendered prose to Claude, parse JSON response."""
         client = anthropic.Anthropic()

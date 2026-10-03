@@ -20,6 +20,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
+from .config import MODEL
 from .model import Essay, Section, Claim, Argument, Figure, Reference, Rhetoric
 
 
@@ -261,7 +262,7 @@ class EssayBuilder:
     def render(
         self,
         agents: Optional[list] = None,
-        model: str = "claude-sonnet-4-20250514",
+        model: str = MODEL,
         output: Optional[str] = None,
     ) -> dict[str, str]:
         from .renderer import render_essay

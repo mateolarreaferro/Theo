@@ -1,4 +1,6 @@
-const BASE = "http://127.0.0.1:8420";
+// The desktop app talks to its own local backend. A web build sets
+// VITE_THEO_API to wherever the same endpoints are hosted.
+const BASE = import.meta.env.VITE_THEO_API || "http://127.0.0.1:8420";
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {

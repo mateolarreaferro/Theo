@@ -18,6 +18,7 @@ from typing import Optional
 from theo.parser import parse, ParseError
 from theo.renderer import render_section as _render_section
 from theo.prompts import essay_system_prompt, section_prompt, CLARIFY_SYSTEM, GENERATE_SYSTEM, _serialize_element
+from theo.config import MODEL
 from theo.model import Essay, Section
 
 from version_store import list_versions, save_version, get_version
@@ -104,7 +105,7 @@ def render(req: RenderRequest):
         if section is None:
             raise HTTPException(status_code=404, detail=f"Section '{req.section_name}' not found")
 
-        prose = _render_section(essay, section, model="claude-sonnet-4-20250514", prior_sections=req.prior_rendered, temperature=req.temperature)
+        prose = _render_section(essay, section, model=MODEL, prior_sections=req.prior_rendered, temperature=req.temperature)
         return {"section": req.section_name, "prose": prose}
     except ParseError as e:
         raise HTTPException(status_code=422, detail=str(e))
@@ -143,7 +144,7 @@ Read this section specification and ask 2-5 clarification questions for the auth
 
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model=MODEL,
             max_tokens=1024,
             system=CLARIFY_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}],
@@ -199,7 +200,7 @@ Incorporate these clarifications into your rendering. They reflect the author's 
 
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model=MODEL,
             max_tokens=2048,
             system=sys_prompt,
             messages=[{"role": "user", "content": enhanced_prompt}],
@@ -241,7 +242,7 @@ def pre_generate_clarify(req: PreGenClarifyRequest):
 
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model=MODEL,
             max_tokens=1024,
             system=PREGEN_CLARIFY_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}],
@@ -279,9 +280,9 @@ Use the author's answers above to guide: section structure, rhetoric modes, tone
 
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model=MODEL,
             max_tokens=4096,
-            temperature=req.temperature,
+            extra_body={"temperature": req.temperature},
             system=GENERATE_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}],
         )
@@ -337,7 +338,7 @@ def trajectories(req: TrajectoriesRequest):
 
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model=MODEL,
             max_tokens=2048,
             system=TRAJECTORIES_SYSTEM,
             messages=[{"role": "user", "content": f"Analyze this essay structure and suggest 3 alternative trajectories:\n\n{structure_summary}"}],
