@@ -69,6 +69,13 @@ function pickFile() {
   });
 }
 
+// The browser version opens on the example essay. Until the writer changes
+// it, it is not their structure: generating from their notes must replace it,
+// not extend it.
+function ownSource(source) {
+  return source === EXAMPLE ? "" : source;
+}
+
 function downloadText(text, filename) {
   const blob = new Blob([text], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
@@ -166,7 +173,7 @@ export default function App() {
         }
         context = conversationParts.join("\n\n");
       }
-      const res = await api.generate(freeform, source, temperature, context);
+      const res = await api.generate(freeform, ownSource(source), temperature, context);
       setSource(res.theo);
       setRendered({});
       setAnnotations([]);
@@ -183,7 +190,7 @@ export default function App() {
     setChatLoading(true);
     setChatMessages([{ role: "user", text: freeform }]);
     try {
-      const res = await api.preGenClarify(freeform, source);
+      const res = await api.preGenClarify(freeform, ownSource(source));
       if (res.questions && res.questions.length > 0) {
         const agentText = res.questions
           .map((q, i) => `${i + 1}. ${q.question}${q.context ? `\n   (${q.context})` : ""}`)
